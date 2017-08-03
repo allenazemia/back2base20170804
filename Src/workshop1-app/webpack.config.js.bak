@@ -1,0 +1,159 @@
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ProgressPlugin = require('webpack/lib/ProgressPlugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const webpack = require('webpack');
+const { NoEmitOnErrorsPlugin } = require('webpack');
+const merge = require('webpack-merge');
+
+const loaderExcludes = [/node_modules/, /builds/, /wwwroot/];
+module.exports = {
+
+    entry: "./src/index.tsx",
+    output: {
+        filename: "bundle.js",
+        path: __dirname + "/dist"
+    },
+
+    // Enable sourcemaps for debugging webpack's output.
+    devtool: "source-map",
+
+    resolve: {
+        // Add '.ts' and '.tsx' as resolvable extensions.
+        extensions: [".ts", ".tsx", ".js", ".json"]
+    },
+    resolveLoader: {
+        modules: [
+            './node_modules'
+        ]
+    },
+    node: {
+        fs: 'empty',
+        global: true,
+        crypto: 'empty',
+        tls: 'empty',
+        net: 'empty',
+        process: true,
+        module: false,
+        clearImmediate: false,
+        setImmediate: false
+    },
+
+    module: {
+        rules: [
+            // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
+            { test: /\.tsx?$/, enforce: 'pre', loader: "awesome-typescript-loader", exlclude: loaderExcludes },
+
+            {
+                'enforce': 'pre',
+                'test': /\.js$/,
+                'loader': 'source-map-loader',
+                exclude: loaderExcludes
+            },
+
+            {
+                test: /\.less$/,
+                use: [
+                    'style-loader',
+                    {
+                        'loader': 'css-loader',
+                        'options': {
+                            'modules': true,
+                            'importLoaders': 1,
+                            'localIdentName': '[name]__[local]___[hash:base64:5]'
+                        }
+                    },
+                    'postcss-loader',
+                    {
+                        'loader': 'less-loader',
+                        'options': {
+                            'sourceMap': false
+                        }
+                    }
+                ],
+                exclude: loaderExcludes
+            },
+
+            {
+                test: /\.scss$/,
+                use: [
+                    'style-loader',
+                    'css-loader',
+                    'sass-loader'
+                ],
+                exclude: loaderExcludes
+            },
+            {
+                test: /\.css$/,
+                use: [
+                    'style-loader',
+                    {
+                        'loader': 'css-loader',
+                        'options': {
+                            'modules': true,
+                            'importLoaders': 1,
+                            'localIdentName': '[name]__[local]___[hash:base64:5]'
+                        }
+                    },
+                    'postcss-loader'
+                ],
+                exclude: loaderExcludes
+            },
+
+            // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
+            { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
+        ]
+    },
+
+    // When importing a module whose path matches one of the following, just
+    // assume a corresponding global variable exists and use that instead.
+    // This is important because it allows us to avoid bundling all of our
+    // dependencies, which allows browsers to cache those libraries between builds.
+    externals: {
+        "react": "React",
+        "react-dom": "ReactDOM"
+    },
+};
+
+const entryPoints = ['manifest', 'vendor', 'polyfills', 'main'];
+
+const plugins = [
+    new NoEmitOnErrorsPlugin(),
+    new ExtractTextPlugin({
+        filename: '[name].css',
+        allChunks: true
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+        name: 'vendor',
+        minChunks: function(module) {
+            // this assumes your vendor imports exist in the node_modules directory
+            if (module.resource && (/^.*\.(css|scss|less)$/).test(module.resource)) {
+                return false;
+            }
+
+            return module.context && module.context.indexOf('node_modules') !== -1;
+        }
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+        name: "manifest"
+    }),
+    new HtmlWebpackPlugin({
+        template: './src/index.html',
+        filename: './index.html',
+        hash: false,
+        favicon: './src/favicon32.png',
+        showErrors: true,
+        chunks: 'all',
+        'chunksSortMode': function sort(left, right) {
+            let leftIndex = entryPoints.indexOf(left.names[0]);
+            let rightIndex = entryPoints.indexOf(right.names[0]);
+            if (leftIndex > rightIndex) {
+                return 1;
+            } else if (leftIndex < rightIndex) {
+                return -1;
+            } else {
+                return 0;
+            }
+        }
+    })
+];

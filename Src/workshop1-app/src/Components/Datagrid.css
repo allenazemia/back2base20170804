@@ -1,0 +1,113 @@
+.table {
+    backface-visibility: hidden;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+    overflow: hidden;
+    width: 100%;
+    flex: 1 1 100%;
+}
+
+.table_content {
+    flex: 1 1 auto;
+    overflow: hidden;
+}
+
+.table.header-is-locked {
+    padding-top: 58px;
+}
+
+.table_row {
+    backface-visibility: hidden;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+    cursor: pointer;
+    display: flex;
+    flex: 0 0 64px;
+    flex-direction: row;
+}
+
+.table_row>.focus {
+    background: rgba(0, 0, 0, 0.09);
+}
+
+.table_row:not(.heading):hover {
+    background: #f8f8f8;
+}
+
+.table_row.heading {
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s 0.1s, top 0.2s, width 0.2s;
+    margin-right: 17px;
+}
+
+.table_row.heading .table_column {
+    color: rgba(0, 0, 0, 0.54);
+    font-size: 13px;
+    text-transform: uppercase;
+}
+
+.table.header-is-locked .table_row.heading {
+    background: #fff;
+    box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.1);
+    left: 0;
+    padding: 0 24px 0 25px;
+    position: fixed;
+    top: 188px;
+    width: 100%;
+    z-index: 10;
+}
+
+.panel-preview-visible .table.header-is-locked .table_row.heading,
+.panel-filter-visible:not(.panel-filter-hidden) .table.header-is-locked .table_row.heading {
+    width: calc(100% - 315px);
+}
+
+.panel-filter-visible .table.header-is-locked .table_row.heading {
+    margin-left: 315px;
+}
+
+.table_column {
+    backface-visibility: hidden;
+    color: rgba(0, 0, 0, 0.76);
+    flex: 0 0 auto;
+    font-size: 15px;
+    line-height: 36px;
+    overflow: hidden;
+    padding: 12px 12px;
+    transition: width 0.15s, flex 0.15s;
+    white-space: nowrap;
+}
+
+.table_summary {
+    display: flex;
+    flex: 0 0 20px;
+    margin-bottom: 20px;
+}
+
+.table-summary_total {
+    flex: 1 1 auto;
+    font-size: 15px;
+    text-align: left;
+}
+
+.table-summary_controls {
+    font-size: 13px;
+    text-align: right;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.table-summary_controls a {
+    color: #01807b;
+    cursor: pointer;
+}
+
+.table_cell {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.scrollable-content_body {
+    transition: transform 0.1s -0.1s;
+}
