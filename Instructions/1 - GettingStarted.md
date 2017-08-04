@@ -27,6 +27,8 @@ yarn add react-router mobx mobx-react inversify
 ```
 
 ### Speeding up the workshop
+1. git clone https://github.com/allenazemia/back2base20170804.git
+2. Copy and paste the contents from the src/workshop1-app directory to your root project directory
 
 
 ### Setup React Router
