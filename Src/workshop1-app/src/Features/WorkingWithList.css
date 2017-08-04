@@ -1,0 +1,15 @@
+.todos {
+    margin: 10px;
+}
+
+.todosList {
+    list-style: none;
+    margin-left: 0;
+    padding-left: 1em;
+    text-indent: -1em;
+}
+
+.todosList li {
+    width: 800px;
+    margin: 10px;
+}

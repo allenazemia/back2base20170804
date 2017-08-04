@@ -44,8 +44,7 @@ export interface IPeople {
 ```
 3.2 The PeopleAsync mock Http Async operations
 ```js
-import { ApiConfiguration } from '../ApiConfiguration';
-import { HttpClient } from '../Http/HttpClient';
+
 import { provide } from '../inversify.config';
 import { IPeople } from './PeopleModels';
 
@@ -55,13 +54,6 @@ const PeopleContext: IPeople[] = [
 
 @provide(PeopleAsync)
 export class PeopleAsync {
-    constructor(private httpClient: HttpClient, private apiConfig: ApiConfiguration) {
-        this.httpClient.setBaseUrl(this.apiConfig.people);
-    }
-
-    getPeople(id: string): Promise<IPeople> {
-        return this.httpClient.get<IPeople>(`api/people/${id}`);
-    }
 
     getAll(): Promise<IPeople[]> {
         return Promise.all(PeopleContext);
@@ -92,11 +84,8 @@ export class PeopleAsync {
         return Promise.resolve(true);
         // return this.httpClient.put<IPeople, IGuidResult>(`api/people/${id}`, people);
     }
-
-    delete(id: number): Promise<Response> {
-        return this.httpClient.delete(`api/people/${id}`);
-    }
 }
+
 ```
 
 ### Create the PeopleStore which acts as a controller
